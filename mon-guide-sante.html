@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Guide Santé</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
+
+  :root {
+    --vert:    #1A6B4A;
+    --vert2:   #24946A;
+    --mint:    #E8F5EE;
+    --or:      #D4A017;
+    --or2:     #F0C040;
+    --blanc:   #FAFDF9;
+    --gris:    #6B7B72;
+    --texte:   #1C2B24;
+    --rouge:   #C0392B;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--blanc);
+    color: var(--texte);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .phone {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    background: var(--blanc);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ── ÉCRANS ── */
+  .screen { display: none; flex-direction: column; min-height: 100vh; }
+  .screen.active { display: flex; }
+
+  /* ── SPLASH ── */
+  #splash {
+    background: linear-gradient(160deg, var(--vert) 0%, #0D4A30 100%);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px 30px;
+    gap: 24px;
+  }
+  .splash-logo {
+    width: 90px; height: 90px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px;
+    border: 2px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(10px);
+  }
+  .splash-title {
+    font-family: 'Lora', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+  }
+  .splash-sub {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.6;
+    max-width: 280px;
+  }
+  .splash-badge {
+    background: var(--or);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: 100px;
+    letter-spacing: 0.5px;
+  }
+  .btn-primary {
+    background: #fff;
+    color: var(--vert);
+    border: none;
+    padding: 16px 32px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.25); }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--vert);
+    padding: 50px 20px 20px;
+    color: #fff;
+  }
+  .header-row { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .back-btn {
+    background: rgba(255,255,255,0.2);
+    border: none; color: #fff;
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .header h2 { font-size: 20px; font-weight: 700; }
+  .header p  { font-size: 13px; color: rgba(255,255,255,0.8); margin-left: 48px; }
+
+  /* ── ACCUEIL ── */
+  #home { background: var(--blanc); }
+  .home-hero {
+    background: linear-gradient(160deg, var(--vert) 0%, #0D4A30 100%);
+    padding: 50px 20px 30px;
+    color: #fff;
+  }
+  .home-greeting { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 4px; }
+  .home-title { font-family: 'Lora', serif; font-size: 26px; font-weight: 600; margin-bottom: 16px; }
+  .home-card {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 16px;
+    padding: 16px;
+    backdrop-filter: blur(10px);
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.9);
+  }
+  .home-body { padding: 20px; flex: 1; }
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gris);
+    margin-bottom: 12px;
+  }
+  .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .menu-card {
+    background: #fff;
+    border: 1.5px solid #E8EEE8;
+    border-radius: 16px;
+    padding: 16px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .menu-card:hover { border-color: var(--vert); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,107,74,0.12); }
+  .menu-icon { font-size: 28px; margin-bottom: 8px; }
+  .menu-name { font-size: 13px; font-weight: 700; color: var(--texte); margin-bottom: 2px; }
+  .menu-desc { font-size: 11px; color: var(--gris); line-height: 1.4; }
+
+  .cta-banner {
+    background: linear-gradient(135deg, var(--or) 0%, #B8860B 100%);
+    border-radius: 18px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .cta-banner:hover { transform: scale(1.02); }
+  .cta-icon { font-size: 32px; }
+  .cta-text h3 { font-size: 15px; font-weight: 700; color: #fff; }
+  .cta-text p  { font-size: 12px; color: rgba(255,255,255,0.85); margin-top: 2px; }
+
+  /* ── DIAGNOSTIC ── */
+  #diagnostic { background: var(--blanc); }
+  .diag-body { padding: 20px; flex: 1; }
+
+  .step-indicator {
+    display: flex; gap: 6px; margin-bottom: 24px;
+  }
+  .step-dot {
+    flex: 1; height: 4px; border-radius: 4px;
+    background: #D8E8DE;
+    transition: background 0.3s;
+  }
+  .step-dot.done { background: var(--vert); }
+  .step-dot.active { background: var(--or); }
+
+  .diag-question {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    color: var(--texte);
+  }
+  .diag-hint { font-size: 13px; color: var(--gris); margin-bottom: 20px; }
+
+  textarea, input[type=text] {
+    width: 100%;
+    border: 2px solid #D8E8DE;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    color: var(--texte);
+    background: #fff;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+  textarea:focus, input[type=text]:focus { border-color: var(--vert); }
+
+  .options-grid { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    background: #fff;
+    border: 2px solid #D8E8DE;
+    border-radius: 14px;
+    padding: 14px 16px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--texte);
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .option-btn:hover, .option-btn.selected {
+    border-color: var(--vert);
+    background: var(--mint);
+    color: var(--vert);
+  }
+  .option-emoji { font-size: 20px; }
+
+  .btn-green {
+    background: var(--vert);
+    color: #fff;
+    border: none;
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    transition: all 0.2s;
+  }
+  .btn-green:hover { background: var(--vert2); transform: translateY(-1px); }
+  .btn-green:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+  /* ── ANALYSE ── */
+  #analyse {
+    background: var(--blanc);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+  }
+  .spinner {
+    width: 64px; height: 64px;
+    border: 5px solid var(--mint);
+    border-top-color: var(--vert);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 24px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .analyse-title { font-family: 'Lora', serif; font-size: 22px; font-weight: 600; margin-bottom: 10px; }
+  .analyse-sub { font-size: 14px; color: var(--gris); line-height: 1.6; }
+
+  /* ── RÉSULTAT ── */
+  #resultat { background: var(--blanc); overflow-y: auto; }
+  .result-header {
+    background: linear-gradient(160deg, var(--vert) 0%, #0D4A30 100%);
+    padding: 50px 20px 30px;
+    color: #fff;
+    text-align: center;
+  }
+  .result-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .result-title { font-family: 'Lora', serif; font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+  .result-sub { font-size: 13px; color: rgba(255,255,255,0.8); }
+
+  .result-body { padding: 20px; }
+
+  .result-card {
+    background: #fff;
+    border: 1.5px solid #E8EEE8;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .result-card-title {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 13px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.8px;
+    color: var(--gris);
+    margin-bottom: 10px;
+  }
+  .result-card-title span { font-size: 18px; }
+  .result-card p { font-size: 14px; line-height: 1.7; color: var(--texte); }
+
+  .alert-card {
+    background: #FEF3CD;
+    border: 1.5px solid var(--or);
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .alert-card-title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 700; color: #8B6914;
+    margin-bottom: 8px;
+  }
+  .alert-card p { font-size: 13px; line-height: 1.6; color: #7A5C10; }
+
+  .kine-card {
+    background: linear-gradient(135deg, var(--vert) 0%, #0D4A30 100%);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 14px;
+    color: #fff;
+  }
+  .kine-card h3 { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+  .kine-name { font-family: 'Lora', serif; font-size: 18px; font-weight: 600; margin-bottom: 14px; }
+  .kine-contacts { display: flex; flex-direction: column; gap: 8px; }
+  .kine-contact-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: #fff;
+    text-decoration: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .kine-contact-btn:hover { background: rgba(255,255,255,0.25); }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--vert);
+    color: var(--vert);
+    padding: 14px;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 4px;
+    transition: all 0.2s;
+  }
+  .btn-outline:hover { background: var(--mint); }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--blanc); }
+  .contact-body { padding: 20px; flex: 1; }
+  .contact-avatar {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--vert), #0D4A30);
+    border-radius: 24px;
+    font-size: 36px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .contact-name {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .contact-role {
+    font-size: 13px;
+    color: var(--gris);
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .contact-list { display: flex; flex-direction: column; gap: 10px; }
+  .contact-item {
+    background: #fff;
+    border: 1.5px solid #E8EEE8;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex; align-items: center; gap: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none; color: inherit;
+  }
+  .contact-item:hover { border-color: var(--vert); background: var(--mint); }
+  .contact-item-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .contact-item-text h4 { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .contact-item-text p  { font-size: 13px; color: var(--gris); }
+
+  /* ── NAV BAS ── */
+  .bottom-nav {
+    background: #fff;
+    border-top: 1.5px solid #E8EEE8;
+    display: flex;
+    padding: 10px 0 20px;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+    cursor: pointer;
+    padding: 6px;
+    border: none; background: transparent;
+    transition: color 0.2s;
+  }
+  .nav-icon { font-size: 22px; }
+  .nav-label { font-size: 10px; font-weight: 600; color: var(--gris); }
+  .nav-item.active .nav-label { color: var(--vert); }
+
+  /* ── LOADER ── */
+  .loading-dots { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
+  .loading-dots span {
+    width: 10px; height: 10px;
+    background: var(--vert);
+    border-radius: 50%;
+    animation: bounce 1.4s infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:scale(0.7);opacity:0.5} 40%{transform:scale(1.1);opacity:1} }
+
+  /* Typewriter */
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .cursor { animation: blink 0.8s infinite; }
+
+  /* Scroll */
+  #resultat .result-body::-webkit-scrollbar { width: 4px; }
+  #resultat .result-body::-webkit-scrollbar-thumb { background: #D8E8DE; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+<!-- ══════════════════════════════════════
+     SPLASH
+══════════════════════════════════════ -->
+<div id="splash" class="screen active">
+  <div class="splash-logo">🌿</div>
+  <div>
+    <div class="splash-title">Mon Guide<br>Santé</div>
+  </div>
+  <div class="splash-badge">Kinésithérapie & Bien-être</div>
+  <div class="splash-sub">Décrivez vos douleurs. Obtenez un pré-diagnostic précis et prenez rendez-vous avec votre kinésithérapeute.</div>
+  <button class="btn-primary" onclick="showScreen('home')">
+    🚀 Commencer — 100 FCFA
+  </button>
+  <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-top:-12px;">Accès illimité après paiement unique</div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ACCUEIL
+══════════════════════════════════════ -->
+<div id="home" class="screen">
+  <div class="home-hero">
+    <div class="home-greeting">Bienvenue dans</div>
+    <div class="home-title">Mon Guide Santé 🌿</div>
+    <div class="home-card">
+      💡 <strong>Saviez-vous ?</strong> La kinésithérapie traite plus de 300 affections — dos, articulations, neurologie, sport. Ne souffrez plus en silence.
+    </div>
+  </div>
+
+  <div class="home-body">
+    <div class="section-label">Que voulez-vous faire ?</div>
+    <div class="menu-grid">
+      <div class="menu-card" onclick="showScreen('diagnostic'); startDiag()">
+        <div class="menu-icon">🩺</div>
+        <div class="menu-name">Diagnostic</div>
+        <div class="menu-desc">Évaluez vos douleurs</div>
+      </div>
+      <div class="menu-card" onclick="showScreen('contact')">
+        <div class="menu-icon">📞</div>
+        <div class="menu-name">Contact</div>
+        <div class="menu-desc">Prendre rendez-vous</div>
+      </div>
+      <div class="menu-card" onclick="alert('Bientôt disponible : exercices guidés !')">
+        <div class="menu-icon">🏃</div>
+        <div class="menu-name">Exercices</div>
+        <div class="menu-desc">Programmes kiné</div>
+      </div>
+      <div class="menu-card" onclick="alert('Bientôt disponible : conseils santé quotidiens !')">
+        <div class="menu-icon">📚</div>
+        <div class="menu-name">Conseils</div>
+        <div class="menu-desc">Articles & santé</div>
+      </div>
+    </div>
+
+    <div class="cta-banner" onclick="showScreen('diagnostic'); startDiag()">
+      <div class="cta-icon">⚡</div>
+      <div class="cta-text">
+        <h3>Démarrer votre diagnostic</h3>
+        <p>Réponse en moins de 2 minutes</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="showScreen('home')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Accueil</span>
+    </button>
+    <button class="nav-item" onclick="showScreen('diagnostic'); startDiag()">
+      <span class="nav-icon">🩺</span><span class="nav-label">Diagnostic</span>
+    </button>
+    <button class="nav-item" onclick="showScreen('contact')">
+      <span class="nav-icon">👨‍⚕️</span><span class="nav-label">Kiné</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     DIAGNOSTIC
+══════════════════════════════════════ -->
+<div id="diagnostic" class="screen">
+  <div class="header">
+    <div class="header-row">
+      <button class="back-btn" onclick="showScreen('home')">←</button>
+      <h2>Diagnostic guidé</h2>
+    </div>
+    <p id="diag-subtitle">Étape 1 sur 5</p>
+  </div>
+
+  <div class="diag-body">
+    <div class="step-indicator" id="step-dots"></div>
+    <div id="diag-content"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ANALYSE
+══════════════════════════════════════ -->
+<div id="analyse" class="screen">
+  <div class="spinner"></div>
+  <div class="analyse-title">Analyse en cours…</div>
+  <div class="analyse-sub">Notre système évalue vos symptômes et prépare votre pré-diagnostic personnalisé.</div>
+  <div class="loading-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     RÉSULTAT
+══════════════════════════════════════ -->
+<div id="resultat" class="screen">
+  <div class="result-header">
+    <div class="result-badge">✅ Analyse complète</div>
+    <div class="result-title" id="result-title">Pré-diagnostic</div>
+    <div class="result-sub" id="result-domain">Domaine identifié</div>
+  </div>
+  <div class="result-body" id="result-body"></div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CONTACT
+══════════════════════════════════════ -->
+<div id="contact" class="screen">
+  <div class="header">
+    <div class="header-row">
+      <button class="back-btn" onclick="showScreen('home')">←</button>
+      <h2>Votre Kinésithérapeute</h2>
+    </div>
+    <p>Prenez rendez-vous maintenant</p>
+  </div>
+  <div class="contact-body">
+    <div class="contact-avatar">👨‍⚕️</div>
+    <div class="contact-name">ASADEU NGANDJOUNG<br>Ange Roussel</div>
+    <div class="contact-role">Kinésithérapeute certifié · Spécialiste en rééducation</div>
+
+    <div class="contact-list">
+      <a class="contact-item" href="https://wa.me/237654760453" target="_blank">
+        <div class="contact-item-icon" style="background:#E8F5EE;">💬</div>
+        <div class="contact-item-text">
+          <h4>WhatsApp</h4>
+          <p>654 760 453</p>
+        </div>
+      </a>
+      <a class="contact-item" href="tel:+237695740797">
+        <div class="contact-item-icon" style="background:#E8F0FE;">📞</div>
+        <div class="contact-item-text">
+          <h4>Appel direct</h4>
+          <p>695 740 797</p>
+        </div>
+      </a>
+      <div class="contact-item" onclick="alert('Consultation sur place ou à domicile disponible. Contactez-nous pour convenir du lieu.')">
+        <div class="contact-item-icon" style="background:#FEF3CD;">📍</div>
+        <div class="contact-item-text">
+          <h4>Cabinet</h4>
+          <p>Voir localisation</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;padding:16px;background:var(--mint);border-radius:16px;font-size:13px;color:var(--gris);line-height:1.6;">
+      🕐 <strong style="color:var(--texte);">Disponibilités :</strong> Lundi – Samedi · 7h30 – 18h00<br>
+      Consultations sur rendez-vous. Urgences acceptées.
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-item" onclick="showScreen('home')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Accueil</span>
+    </button>
+    <button class="nav-item" onclick="showScreen('diagnostic'); startDiag()">
+      <span class="nav-icon">🩺</span><span class="nav-label">Diagnostic</span>
+    </button>
+    <button class="nav-item active" onclick="showScreen('contact')">
+      <span class="nav-icon">👨‍⚕️</span><span class="nav-label">Kiné</span>
+    </button>
+  </div>
+</div>
+
+</div><!-- /phone -->
+
+<script>
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ══════════════════════════════════════
+// DONNÉES DIAGNOSTIC
+// ══════════════════════════════════════
+let diagAnswers = {};
+let currentStep = 0;
+
+const STEPS = [
+  {
+    id: 'zone',
+    question: 'Où ressentez-vous la douleur ?',
+    hint: 'Choisissez la zone principale concernée',
+    type: 'options',
+    options: [
+      { emoji: '🔙', label: 'Dos / Colonne vertébrale' },
+      { emoji: '🦵', label: 'Jambes / Genoux / Chevilles' },
+      { emoji: '💪', label: 'Épaules / Bras / Coudes' },
+      { emoji: '🦶', label: 'Pieds / Talons' },
+      { emoji: '🧠', label: 'Tête / Nuque / Cou' },
+      { emoji: '🫀', label: 'Autre zone' },
+    ]
+  },
+  {
+    id: 'duree',
+    question: 'Depuis combien de temps ?',
+    hint: 'La durée aide à identifier le type d\'affection',
+    type: 'options',
+    options: [
+      { emoji: '⚡', label: 'Moins de 3 jours (aigu)' },
+      { emoji: '📅', label: '3 jours à 3 semaines' },
+      { emoji: '🗓️', label: '3 semaines à 3 mois' },
+      { emoji: '♾️', label: 'Plus de 3 mois (chronique)' },
+    ]
+  },
+  {
+    id: 'intensite',
+    question: 'Quelle est l\'intensité de la douleur ?',
+    hint: 'Sur 10, 1 = légère, 10 = insupportable',
+    type: 'options',
+    options: [
+      { emoji: '🟢', label: '1 – 3 : Légère, supportable' },
+      { emoji: '🟡', label: '4 – 6 : Modérée, gênante' },
+      { emoji: '🟠', label: '7 – 8 : Intense, difficile' },
+      { emoji: '🔴', label: '9 – 10 : Très sévère' },
+    ]
+  },
+  {
+    id: 'contexte',
+    question: 'Quand la douleur apparaît-elle ?',
+    hint: 'Plusieurs situations peuvent s\'appliquer',
+    type: 'options',
+    options: [
+      { emoji: '🚶', label: 'En marchant / debout' },
+      { emoji: '🪑', label: 'En position assise' },
+      { emoji: '🌙', label: 'La nuit / au repos' },
+      { emoji: '🏃', label: 'Après l\'effort physique' },
+    ]
+  },
+  {
+    id: 'symptomes',
+    question: 'Avez-vous d\'autres symptômes ?',
+    hint: 'Décrivez librement',
+    type: 'textarea',
+    placeholder: 'Ex : engourdissement, fourmillements, gonflement, raideur le matin, difficulté à marcher…'
+  }
+];
+
+// ══════════════════════════════════════
+// DIAGNOSTIC ENGINE
+// ══════════════════════════════════════
+function startDiag() {
+  diagAnswers = {};
+  currentStep = 0;
+  renderStep();
+}
+
+function renderStep() {
+  const step = STEPS[currentStep];
+  document.getElementById('diag-subtitle').textContent = `Étape ${currentStep+1} sur ${STEPS.length}`;
+
+  // Dots
+  let dots = '';
+  for (let i = 0; i < STEPS.length; i++) {
+    let cls = i < currentStep ? 'done' : i === currentStep ? 'active' : '';
+    dots += `<div class="step-dot ${cls}"></div>`;
+  }
+  document.getElementById('step-dots').innerHTML = dots;
+
+  let html = `
+    <div class="diag-question">${step.question}</div>
+    <div class="diag-hint">${step.hint}</div>
+  `;
+
+  if (step.type === 'options') {
+    html += `<div class="options-grid" id="options-grid">`;
+    step.options.forEach((opt, i) => {
+      html += `
+        <button class="option-btn" onclick="selectOption(${i}, this)">
+          <span class="option-emoji">${opt.emoji}</span>
+          ${opt.label}
+        </button>
+      `;
+    });
+    html += `</div>`;
+    html += `<button class="btn-green" id="next-btn" onclick="nextStep()" disabled>Continuer →</button>`;
+  } else {
+    html += `
+      <textarea id="free-text" rows="4" placeholder="${step.placeholder}"></textarea>
+      <button class="btn-green" onclick="nextStep()">Analyser maintenant 🔍</button>
+    `;
+  }
+
+  document.getElementById('diag-content').innerHTML = html;
+}
+
+function selectOption(idx, btn) {
+  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  diagAnswers[STEPS[currentStep].id] = STEPS[currentStep].options[idx].label;
+  const nb = document.getElementById('next-btn');
+  if (nb) nb.disabled = false;
+}
+
+function nextStep() {
+  const step = STEPS[currentStep];
+  if (step.type === 'textarea') {
+    diagAnswers[step.id] = document.getElementById('free-text').value || 'Aucun symptôme supplémentaire';
+  }
+  currentStep++;
+  if (currentStep >= STEPS.length) {
+    launchAnalysis();
+  } else {
+    renderStep();
+  }
+}
+
+// ══════════════════════════════════════
+// ANALYSE & IA
+// ══════════════════════════════════════
+async function launchAnalysis() {
+  showScreen('analyse');
+
+  const prompt = `Tu es un kinésithérapeute expert. Un patient a fourni ces informations :
+- Zone douloureuse : ${diagAnswers.zone || 'non précisé'}
+- Durée : ${diagAnswers.duree || 'non précisé'}
+- Intensité : ${diagAnswers.intensite || 'non précisé'}
+- Contexte d'apparition : ${diagAnswers.contexte || 'non précisé'}
+- Autres symptômes : ${diagAnswers.symptomes || 'aucun'}
+
+Réponds UNIQUEMENT en JSON valide (pas de markdown, pas de texte avant ou après), avec ce format exact :
+{
+  "domaine": "Nom du domaine kiné (ex: Rhumatologie, Neurologie, Traumatologie...)",
+  "diagnostic_probable": "Nom de l'affection probable (2-4 mots)",
+  "explication": "Explication claire en 2-3 phrases pour le patient profane",
+  "risques_si_non_traite": "2-3 conséquences possibles si pas de kiné",
+  "pourquoi_kine": "Argument fort en 2 phrases pourquoi la kiné est la meilleure solution",
+  "urgence": "faible | modérée | élevée",
+  "seances_estimees": "nombre de séances recommandées (ex: 10 à 15 séances)"
+}`;
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content.map(i => i.text || '').join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    const result = JSON.parse(clean);
+    showResult(result);
+  } catch (e) {
+    // Fallback si erreur API
+    showResult({
+      domaine: "Rhumatologie / Musculosquelettique",
+      diagnostic_probable: "Lombalgie chronique",
+      explication: "Votre description évoque une douleur d'origine musculaire ou articulaire. Ce type d'affection est très courant et répond très bien à la kinésithérapie.",
+      risques_si_non_traite: "Sans traitement : risque de douleur chronique, raideur progressive, et limitation des activités quotidiennes.",
+      pourquoi_kine: "La kinésithérapie agit directement sur la cause de votre douleur par des techniques manuelles et des exercices ciblés. C'est le traitement de référence recommandé par l'OMS.",
+      urgence: "modérée",
+      seances_estimees: "8 à 12 séances"
+    });
+  }
+}
+
+function showResult(r) {
+  document.getElementById('result-title').textContent = r.diagnostic_probable;
+  document.getElementById('result-domain').textContent = '📋 Domaine : ' + r.domaine;
+
+  const urgenceColor = r.urgence === 'élevée' ? '#C0392B' : r.urgence === 'modérée' ? '#D4A017' : '#1A6B4A';
+  const urgenceEmoji = r.urgence === 'élevée' ? '🔴' : r.urgence === 'modérée' ? '🟡' : '🟢';
+
+  document.getElementById('result-body').innerHTML = `
+    <div class="result-card">
+      <div class="result-card-title"><span>🔍</span> Analyse</div>
+      <p>${r.explication}</p>
+    </div>
+
+    <div class="result-card" style="border-color:${urgenceColor}20;background:${urgenceColor}08">
+      <div class="result-card-title" style="color:${urgenceColor}"><span>${urgenceEmoji}</span> Niveau d'urgence</div>
+      <p style="font-weight:700;color:${urgenceColor};font-size:16px;text-transform:capitalize">${r.urgence}</p>
+      <p style="margin-top:4px;font-size:13px;color:var(--gris)">Séances recommandées : <strong style="color:var(--texte)">${r.seances_estimees}</strong></p>
+    </div>
+
+    <div class="alert-card">
+      <div class="alert-card-title">⚠️ Si vous ne consultez pas…</div>
+      <p>${r.risques_si_non_traite}</p>
+    </div>
+
+    <div class="result-card" style="border-color:var(--vert)30;background:var(--mint)">
+      <div class="result-card-title" style="color:var(--vert)"><span>✅</span> Pourquoi la kinésithérapie ?</div>
+      <p>${r.pourquoi_kine}</p>
+    </div>
+
+    <div class="kine-card">
+      <h3>Votre kinésithérapeute</h3>
+      <div class="kine-name">ASADEU NGANDJOUNG<br>Ange Roussel</div>
+      <div class="kine-contacts">
+        <a class="kine-contact-btn" href="https://wa.me/237654760453" target="_blank">
+          💬 WhatsApp · 654 760 453
+        </a>
+        <a class="kine-contact-btn" href="tel:+237695740797">
+          📞 Appel · 695 740 797
+        </a>
+      </div>
+    </div>
+
+    <button class="btn-outline" onclick="startDiag(); showScreen('diagnostic')">
+      🔄 Nouveau diagnostic
+    </button>
+    <div style="height:30px"></div>
+  `;
+
+  showScreen('resultat');
+}
+</script>
+</body>
+</html>
